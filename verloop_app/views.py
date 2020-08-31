@@ -43,10 +43,12 @@ class StoryView(APIView):
                     cur_object.sentences = [request.data["word"]]
                     cur_object.save()
                     StoryUtility.check_paragraph(cur_object, cur_object.sentences)
+                    StoryUtility.is_story_completed(cur_object)
                 else:
                     cur_object.sentences[-1] = cur_object.sentences[-1]+" "+request.data["word"]
                     cur_object.save()
                     StoryUtility.check_paragraph(cur_object, cur_object.sentences)
+                    StoryUtility.is_story_completed(cur_object)
             response_dict = {
                 "id": cur_object.id,
                 "title": cur_object.title,
