@@ -15,7 +15,7 @@ class StoryView(APIView):
 
     def post(self, request):
         """ to add words in story"""
-        if len(request.data["word"].split(" "))>1:
+        if len(request.data["word"].split(" ")) > 1:
             response_dict = {
                 "error": "multiple words sent"
             }
@@ -43,12 +43,15 @@ class StoryView(APIView):
                     cur_object.sentences = [request.data["word"]]
                     cur_object.save()
                     StoryUtility.check_paragraph(cur_object, cur_object.sentences)
-                    StoryUtility.is_story_completed(cur_object)
+                    StoryUtility.check_story_completed(cur_object)
                 else:
                     cur_object.sentences[-1] = cur_object.sentences[-1]+" "+request.data["word"]
                     cur_object.save()
                     StoryUtility.check_paragraph(cur_object, cur_object.sentences)
-                    StoryUtility.is_story_completed(cur_object)
+                    StoryUtility.check_story_completed(cur_object)
+            else:
+                StoryUtility.check_paragraph(cur_object, cur_object.sentences)
+                StoryUtility.check_story_completed(cur_object)
             response_dict = {
                 "id": cur_object.id,
                 "title": cur_object.title,
@@ -56,4 +59,3 @@ class StoryView(APIView):
             }
 
         return Response(json.dumps(response_dict), status=status.HTTP_200_OK)
-
