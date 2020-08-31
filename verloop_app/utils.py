@@ -63,4 +63,7 @@ class StoryUtility:
         if len(current_story.paragraphs) >= 7:
             current_story.offset = 1
             current_story.save()
-        Story.objects.create(offset=0)
+            return True
+        if not Story.objects.get(offset=0):
+            Story.objects.create(offset=0)
+        return False

@@ -38,6 +38,11 @@ class StoryView(APIView):
                     title = cur_object.title+" "+request.data["word"]
                     cur_object.title = " ".join(title.split(" "))
                     cur_object.save()
+                response_dict = {
+                    "id": cur_object.id,
+                    "title": cur_object.title,
+                    "current_sentence": cur_object.sentences
+                }
             elif not StoryUtility.is_sentence_completed(cur_object, request.data["word"]):
                 if cur_object.sentences is None:
                     cur_object.sentences = [request.data["word"]]
@@ -49,13 +54,18 @@ class StoryView(APIView):
                     cur_object.save()
                     StoryUtility.check_paragraph(cur_object, cur_object.sentences)
                     StoryUtility.check_story_completed(cur_object)
+                response_dict = {
+                    "id": cur_object.id,
+                    "title": cur_object.title,
+                    "current_sentence": cur_object.sentences
+                }
             else:
                 StoryUtility.check_paragraph(cur_object, cur_object.sentences)
                 StoryUtility.check_story_completed(cur_object)
-            response_dict = {
-                "id": cur_object.id,
-                "title": cur_object.title,
-                "current_sentence": cur_object.sentences[-1]
-            }
+                response_dict = {
+                    "id": cur_object.id,
+                    "title": cur_object.title,
+                    "current_sentence": cur_object.sentences
+                }
 
-        return Response(json.dumps(response_dict), status=status.HTTP_200_OK)
+        return Response(response_dict, status=status.HTTP_200_OK)
