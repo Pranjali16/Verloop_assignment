@@ -16,8 +16,7 @@ class Story(BaseModel):
     title = models.CharField(max_length=500, blank=True, null=True)
     sentences = ArrayField(models.CharField(max_length=500), blank=True, null=True)
     paragraphs = ArrayField(models.CharField(max_length=1000), blank=True, null=True)
-    offset = models.PositiveIntegerField(blank=True)
-    count = models.IntegerField(blank=True, null=True)
+    offset = models.PositiveIntegerField(default=0, blank=True)
 
     def __str__(self):
         return "%s %s" % (self.title, self.created_at)
